@@ -16,5 +16,8 @@ namespace Books.Persistence
         {
             _dbContext = dbContext;
         }
+
+        public bool IsDuplicateAuthor(Author author)
+            => _dbContext.Authors.Any(a => a.Id == author.Id && a.Name.Equals(author.Name));
     }
 }

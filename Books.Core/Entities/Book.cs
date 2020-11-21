@@ -1,5 +1,4 @@
 ﻿using Books.Core.Validations;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -41,7 +40,9 @@ namespace Books.Core.Entities
         /// <returns>Prüfergebnis</returns>
         public static bool CheckIsbn(string isbn)
         {
-            if (isbn.Length != 10)
+            if (isbn.Length != 10 || 
+                string.IsNullOrWhiteSpace(isbn) ||
+                string.IsNullOrEmpty(isbn))
             {
                 return false;
             }
@@ -93,7 +94,16 @@ namespace Books.Core.Entities
         /// <returns></returns>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            yield return ValidationResult.Success;
+            if(BookAuthors.Count < 1 || BookAuthors == null)
+            {
+                yield return new ValidationResult(
+                    "Buch muss mindestens einen Author haben", 
+                    new string[] { nameof(BookAuthors)});
+            }
+            //foreach (var item in BookAuthors)
+            //{
+                
+            //}
         }
     }
 }
