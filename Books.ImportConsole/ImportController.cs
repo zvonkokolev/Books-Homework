@@ -15,27 +15,57 @@ namespace Books.ImportConsole
             string[][] notValidMatrix = MyFile.ReadStringMatrixFromCsv(inputFile, false);
             IsbnValidation isbnValidation = new IsbnValidation();
 
-            string[][] matrix = notValidMatrix.Where(b => isbnValidation.IsValid(b[3])).ToArray();
-            string[] authorOfBook = notValidMatrix.Select(b => b[0]).ToArray();
-
-            string[] authorsNames = notValidMatrix.SelectMany(n => n[0].Split('~')).ToArray();
-
-            Author[] authors = notValidMatrix
+            string[][] matrix = notValidMatrix
+                .Where(b => isbnValidation
+                .IsValid(b[3]))
+                .ToArray()
+                ;
+            Dictionary<Book, Author[]> keyValuePairs = new Dictionary<Book, Author[]>();
+            foreach (var item in matrix)
+            {
+                keyValuePairs
+                    .Add(new Book
+                    {
+                        Isbn = item[3],
+                        Publishers = item[2],
+                        Title = item[1]
+                    }
+                    ,
+                     item[0]
+                     .Split('~')
+                    .Distinct()
+                    .Select(a => new Author
+                    {
+                        Name = a
+                    })
+                    .ToArray()
+                    );
+            }
+            Author[] authors = matrix
+                .SelectMany(n => n[0].Split('~'))
+                .Distinct()
                 .Select(a => new Author
                 {
-                    Name = authorOfBook.Where(n => n.Contains(a[0])).FirstOrDefault()
+                    Name = a
                 })
                 .ToArray()
                 ;
-
-            Book[] books = notValidMatrix.Select(b => new Book
-            {
-                Title = b[1],
-                Publishers = b[2],
-                Isbn = b[3]
-            })
-            .ToArray()
-            ;
+            Book[] books = notValidMatrix
+                .Select(b => new Book
+                {
+                    Title = b[1],
+                    Publishers = b[2],
+                    Isbn = b[3],
+                    BookAuthors = keyValuePairs
+                        .Select(ba => new BookAuthor
+                        {
+                            Book = ba.Key,
+                            Author = ba.Value.FirstOrDefault()
+                        })
+                        .ToArray()
+                })
+                .ToArray()
+                ;
             return books;
         }
     }
