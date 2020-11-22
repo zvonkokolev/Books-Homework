@@ -100,6 +100,11 @@ namespace Books.Core.Entities
                     "Buch muss mindestens einen Author haben", 
                     new string[] { nameof(BookAuthors)});
             }
+            ValidationResult validationResult = new IsbnValidation().GetValidationResult(Isbn, new ValidationContext(Isbn));
+            if(validationResult != null || validationResult != ValidationResult.Success)
+            {
+                yield return new ValidationResult(validationResult.ErrorMessage, new string[] { nameof(Isbn)});
+            }
             //foreach (var item in BookAuthors)
             //{
                 

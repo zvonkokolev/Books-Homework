@@ -8,5 +8,6 @@ namespace Books.Core.Contracts
     public interface IAuthorRepository
     {
         bool IsDuplicateAuthor(Author author);
+        Task<Author[]> GetAllAuthorsAsync();
     }
 }

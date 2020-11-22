@@ -1,7 +1,9 @@
 using Books.Core.Contracts;
 using Books.Core.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Books.Persistence
@@ -17,5 +19,12 @@ namespace Books.Persistence
 
         public async Task AddRangeAsync(IEnumerable<Book> books)
             => await _dbContext.AddRangeAsync(books);
+
+        public async Task<Book[]> GetAllBooksAsync()
+            => await _dbContext.Books
+            .Include(ba => ba.BookAuthors)
+            .OrderByDescending(ba => ba.Title)
+            .ToArrayAsync();
+
     }
 }

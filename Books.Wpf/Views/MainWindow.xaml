@@ -10,7 +10,25 @@
         WindowStyle="ThreeDBorderWindow" BorderThickness="2" 
         BorderBrush="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}"
         Title="Bücherliste" Height="350" Width="820">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
 
+        <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal">
+            <TextBlock Text="Suche nach Titel" Margin="20,20,20,20">
+            </TextBlock>
+            <TextBox Text="" TextWrapping="Wrap" Width="120" Margin="20,20,20,20" DataContext="{Binding Path=Title}"/>
+        </StackPanel>
+        
+        <DataGrid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding Path=Books}" SelectedItem="{Binding Path=SelectedBook}">
+        </DataGrid>
+    </Grid>
 
 </controls:MetroWindow>
 
