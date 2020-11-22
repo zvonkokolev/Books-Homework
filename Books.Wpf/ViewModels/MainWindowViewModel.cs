@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace Books.Wpf.ViewModels
 {
@@ -16,6 +17,9 @@ namespace Books.Wpf.ViewModels
     {
         private Book _selectedBook;
         private Author _selectedAuthor;
+        private ICommand _cmdNewBook;
+        private ICommand _cmdEditBook;
+        private ICommand _cmdDeleteBook;
 
         public ObservableCollection<Book> Books { get; private set; }
         public ObservableCollection<Author> Authors { get; private set; }
@@ -88,6 +92,78 @@ namespace Books.Wpf.ViewModels
             if (Authors == null)
             {
                 yield return new ValidationResult($"Authoren Datenbank ist fehlerhaft", new string[] { nameof(Authors) });
+            }
+        }
+
+        // commands
+        public ICommand CmdNewBook 
+        {
+            get
+            {
+                if (_cmdNewBook == null)
+                {
+                    _cmdNewBook = new RelayCommand(
+                        execute: _ =>
+                        {
+                            var window = new BookEditCreateViewModel(Controller, SelectedBook);
+                            window.Controller.ShowWindow(window, true);
+                        }
+                        ,
+                        canExecute: _ => SelectedBook != null
+                        );
+
+                }
+                return _cmdNewBook;
+            }
+            set
+            {
+                _cmdNewBook = value;
+            }
+        }
+        public ICommand CmdEditBook
+        {
+            get
+            {
+                if (_cmdEditBook == null)
+                {
+                    _cmdEditBook = new RelayCommand(
+                        execute: _ =>
+                        {
+                            var window = new BookEditCreateViewModel(Controller, SelectedBook);
+                            window.Controller.ShowWindow(window, true);
+                        }
+                        ,
+                        canExecute: _ => SelectedBook != null
+                        );
+                }
+                return _cmdEditBook;
+            }
+            set
+            {
+                _cmdEditBook = value;
+            }
+        }
+        public ICommand CmdDeleteBook
+        {
+            get
+            {
+                if(_cmdDeleteBook == null)
+                {
+                    _cmdDeleteBook = new RelayCommand(
+                          execute: _ =>
+                          {
+                              var window = new BookEditCreateViewModel(Controller, SelectedBook);
+                              window.Controller.ShowWindow(window, true);
+                          }
+                        ,
+                        canExecute: _ => SelectedBook != null
+                        );
+                }
+                return _cmdDeleteBook;
+            } 
+            set
+            {
+                _cmdDeleteBook = value;
             }
         }
     }

@@ -14,6 +14,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"></ColumnDefinition>
@@ -28,6 +29,9 @@
         
         <DataGrid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding Path=Books}" SelectedItem="{Binding Path=SelectedBook}">
         </DataGrid>
+        <StackPanel Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Horizontal">
+            <Button Content="{Binding Path=SelectedBook}" Command="{Binding Path=CmdNewBook}" Margin="5,5,5,5"></Button>
+        </StackPanel>
     </Grid>
 
 </controls:MetroWindow>
