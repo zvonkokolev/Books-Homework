@@ -9,7 +9,7 @@
         mc:Ignorable="d"
         WindowStyle="ThreeDBorderWindow" BorderThickness="2" 
         BorderBrush="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}"
-        Title="Bücherliste" Height="350" Width="820">
+        Title="Bücherliste" Height="650" Width="999" MinHeight="350" MinWidth="750">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
@@ -29,12 +29,23 @@
                      TextWrapping="Wrap" Width="120" Margin="20,20,20,20"/>
         </StackPanel>
 
-        <ListBox ItemsSource="{Binding Path=FilteredBooks}"
-                SelectedItem="{Binding Path=SelectedBook}"
-                Grid.Row="1" Grid.ColumnSpan="3"></ListBox>
+        <DataGrid ItemsSource="{Binding Path=FilteredBooksDto}"
+                SelectedItem="{Binding Path=SelectedBookDto}"
+                Grid.Row="1" Grid.ColumnSpan="3"></DataGrid>
 
-        <StackPanel Grid.Row="2" Grid.Column="2" Orientation="Horizontal">
-            <Button Content="{Binding Path=SelectedBook}" Command="{Binding Path=CmdNewBook}" Margin="5,5,5,5"></Button>
+        <StackPanel Grid.Row="2" Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="Neu" 
+                    Command="{Binding Path=CmdNewBook}"
+                    Width="75"
+                    Margin="5,5,5,5"></Button>
+            <Button Content="Bearbeiten" 
+                    Command="{Binding Path=CmdEditBook}"
+                    Width="75"
+                    Margin="5,5,5,5"></Button>
+            <Button Content="Löschen" 
+                    Command="{Binding Path=CmdDeleteBook}"
+                    Width="75"
+                    Margin="5,5,5,5"></Button>
         </StackPanel>
     </Grid>
 

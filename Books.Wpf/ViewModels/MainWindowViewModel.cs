@@ -1,5 +1,6 @@
 ﻿
 using Books.Core.Contracts;
+using Books.Core.DataTransferObjects;
 using Books.Core.Entities;
 using Books.Persistence;
 using Books.Wpf.Common;
@@ -15,16 +16,34 @@ namespace Books.Wpf.ViewModels
 {
     public class MainWindowViewModel : BaseViewModel
     {
+        #region fields
         private Book _selectedBook;
         private Author _selectedAuthor;
         private ICommand _cmdEditBook;
         private ICommand _cmdDeleteBook;
         private string _searchText;
-        private Book[] _filteredBooks;
-
-        public ObservableCollection<Book> Books { get; private set; }
+        //private Book[] _filteredBooks;
+        private BookDto _selectedBookDto;
+        private BookDto[] _filteredBooksDto;
+        #endregion
+        #region properties
+        //public ObservableCollection<Book> Books { get; private set; }
+        public ObservableCollection<BookDto> BooksDto { get; private set; }
         public ObservableCollection<Author> Authors { get; private set; }
         public ICommand CmdNewBook { get; set; }
+        public ICommand CmdEditBook { get; set; }
+        public ICommand CmdDeleteBook { get; set; }
+
+        public BookDto SelectedBookDto
+        {
+            get { return _selectedBookDto; }
+            set
+            {
+                _selectedBookDto = value;
+                //EditMemberCommandText = $"Member {SelectedMember?.LastName} {SelectedMember?.FirstName} bearbeiten";
+                OnPropertyChanged();
+            }
+        }
 
         public string SearchText 
         {
@@ -36,13 +55,22 @@ namespace Books.Wpf.ViewModels
                 OnPropertyChanged(nameof(SearchText));
             }
         }
-        public Book[] FilteredBooks 
+        //public Book[] FilteredBooks
+        //{
+        //    get => _filteredBooks;
+        //    set
+        //    {
+        //        _filteredBooks = value;
+        //        OnPropertyChanged(nameof(FilteredBooks));
+        //    }
+        //}
+        public BookDto[] FilteredBooksDto
         {
-            get => _filteredBooks;
+            get => _filteredBooksDto;
             set
             {
-                _filteredBooks = value;
-                OnPropertyChanged(nameof(FilteredBooks));
+                _filteredBooksDto = value;
+                OnPropertyChanged(nameof(FilteredBooksDto));
             }
         }
         public Book SelectedBook 
@@ -63,7 +91,7 @@ namespace Books.Wpf.ViewModels
                 OnPropertyChanged(nameof(SelectedAuthor));
             }
         }
-
+        #endregion
         public MainWindowViewModel() : base(null)
         {
         }
@@ -82,8 +110,29 @@ namespace Books.Wpf.ViewModels
                     window.Controller.ShowWindow(window, true);
                 }
                 ,
-                canExecute: _ => SelectedBook != null
-                );
+                canExecute: _ => SelectedBookDto != null
+                )
+                ;
+            CmdEditBook = new RelayCommand(
+                execute: _ =>
+                {
+                    var window = new BookEditCreateViewModel(Controller, SelectedBook);
+                    window.Controller.ShowWindow(window, true);
+                }
+                ,
+                canExecute: _ => SelectedBookDto != null
+                )
+                ;
+            CmdDeleteBook = new RelayCommand(
+                  execute: _ =>
+                  {
+                      var window = new BookEditCreateViewModel(Controller, SelectedBook);
+                      window.Controller.ShowWindow(window, true);
+                  }
+                ,
+                canExecute: _ => SelectedBookDto != null
+                )
+                ;
         }
 
         /// <summary>
@@ -91,23 +140,30 @@ namespace Books.Wpf.ViewModels
         /// </summary>
         public async Task LoadBooks()
         {
-            Book[] books;
+            //Book[] books;
+            BookDto[] booksDto;
             await using IUnitOfWork unitOfWork = new UnitOfWork();
             if (SearchText == null)
             {
-                books = await unitOfWork.Books.GetAllBooksAsync();
+                //books = await unitOfWork.Books.GetAllBooksAsync();
+                booksDto = await unitOfWork.Books.GetAllBooksDtoAsync();
             }
             else
             {
-                books = await unitOfWork.Books.GetFilteredBooksAsync(SearchText);
+                //books = await unitOfWork.Books.GetFilteredBooksAsync(SearchText);
+                booksDto = await unitOfWork.Books.GetFilteredBooksDtoAsync(SearchText);
             }
             Author[] authors = await unitOfWork.Authors.GetAllAuthorsAsync();
 
-            Books = new ObservableCollection<Book>(books);
-            FilteredBooks = books;
+            //Books = new ObservableCollection<Book>(books);
+            //FilteredBooks = books;
+            BooksDto = new ObservableCollection<BookDto>(booksDto);
+            FilteredBooksDto = booksDto;
+
             Authors = new ObservableCollection<Author>(authors);
 
-            SelectedBook = Books.FirstOrDefault();
+            //SelectedBook = Books.FirstOrDefault();
+            SelectedBookDto = BooksDto.FirstOrDefault();
             SelectedAuthor = Authors.FirstOrDefault();
 
         }
@@ -121,7 +177,7 @@ namespace Books.Wpf.ViewModels
 
         public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if(Books == null)
+            if(BooksDto == null)
             {
                 yield return new ValidationResult($"Bücher Datenbank ist fehlerhaft", new string[] { nameof(Books)});
             }
@@ -156,51 +212,5 @@ namespace Books.Wpf.ViewModels
         //        _cmdNewBook = value;
         //    }
         //}
-        public ICommand CmdEditBook
-        {
-            get
-            {
-                if (_cmdEditBook == null)
-                {
-                    _cmdEditBook = new RelayCommand(
-                        execute: _ =>
-                        {
-                            var window = new BookEditCreateViewModel(Controller, SelectedBook);
-                            window.Controller.ShowWindow(window, true);
-                        }
-                        ,
-                        canExecute: _ => SelectedBook != null
-                        );
-                }
-                return _cmdEditBook;
-            }
-            set
-            {
-                _cmdEditBook = value;
-            }
-        }
-        public ICommand CmdDeleteBook
-        {
-            get
-            {
-                if(_cmdDeleteBook == null)
-                {
-                    _cmdDeleteBook = new RelayCommand(
-                          execute: _ =>
-                          {
-                              var window = new BookEditCreateViewModel(Controller, SelectedBook);
-                              window.Controller.ShowWindow(window, true);
-                          }
-                        ,
-                        canExecute: _ => SelectedBook != null
-                        );
-                }
-                return _cmdDeleteBook;
-            } 
-            set
-            {
-                _cmdDeleteBook = value;
-            }
-        }
     }
 }
