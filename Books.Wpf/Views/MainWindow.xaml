@@ -18,18 +18,22 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"></ColumnDefinition>
-            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
-        <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal">
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
             <TextBlock Text="Suche nach Titel" Margin="20,20,20,20">
             </TextBlock>
-            <TextBox Text="" TextWrapping="Wrap" Width="120" Margin="20,20,20,20" DataContext="{Binding Path=Title}"/>
+            <TextBox Text="{Binding Path=SearchText, UpdateSourceTrigger=PropertyChanged}"
+                     TextWrapping="Wrap" Width="120" Margin="20,20,20,20"/>
         </StackPanel>
-        
-        <DataGrid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding Path=Books}" SelectedItem="{Binding Path=SelectedBook}">
-        </DataGrid>
-        <StackPanel Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Horizontal">
+
+        <ListBox ItemsSource="{Binding Path=FilteredBooks}"
+                SelectedItem="{Binding Path=SelectedBook}"
+                Grid.Row="1" Grid.ColumnSpan="3"></ListBox>
+
+        <StackPanel Grid.Row="2" Grid.Column="2" Orientation="Horizontal">
             <Button Content="{Binding Path=SelectedBook}" Command="{Binding Path=CmdNewBook}" Margin="5,5,5,5"></Button>
         </StackPanel>
     </Grid>

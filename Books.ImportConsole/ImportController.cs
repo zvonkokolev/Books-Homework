@@ -20,52 +20,40 @@ namespace Books.ImportConsole
                 .IsValid(b[3]))
                 .ToArray()
                 ;
-            Dictionary<Book, Author[]> keyValuePairs = new Dictionary<Book, Author[]>();
-            foreach (var item in matrix)
+
+            List<Book> books = new List<Book>();
+            List<BookAuthor> bookAuthors = new List<BookAuthor>();
+            Dictionary<string, Author> authors = new Dictionary<string, Author>();
+
+            foreach (var item in notValidMatrix)
             {
-                keyValuePairs
-                    .Add(new Book
-                    {
-                        Isbn = item[3],
-                        Publishers = item[2],
-                        Title = item[1]
-                    }
-                    ,
-                     item[0]
-                     .Split('~')
-                    .Distinct()
-                    .Select(a => new Author
-                    {
-                        Name = a
-                    })
-                    .ToArray()
-                    );
-            }
-            Author[] authors = matrix
-                .SelectMany(n => n[0].Split('~'))
-                .Distinct()
-                .Select(a => new Author
+                string[] authorsAll = item[0].Split('~');
+                Book book = new Book
                 {
-                    Name = a
-                })
-                .ToArray()
-                ;
-            Book[] books = notValidMatrix
-                .Select(b => new Book
+                    Title = item[1],
+                    Publishers = item[2],
+                    Isbn = item[3]
+                };
+                foreach (var an in authorsAll)
                 {
-                    Title = b[1],
-                    Publishers = b[2],
-                    Isbn = b[3],
-                    BookAuthors = keyValuePairs
-                        .Select(ba => new BookAuthor
+                    if (!authors.TryGetValue(an, out Author author))
+                    {
+                        author = new Author
                         {
-                            Book = ba.Key,
-                            Author = ba.Value.FirstOrDefault()
-                        })
-                        .ToArray()
-                })
-                .ToArray()
-                ;
+                            Name = an
+                        };
+                        authors[an] = author;
+                    }
+                    BookAuthor bookAuthor = new BookAuthor
+                    {
+                        Book = book,
+                        Author = author
+                    };
+                    book.BookAuthors.Add(bookAuthor);
+                }
+                books.Add(book);
+            }
+
             return books;
         }
     }

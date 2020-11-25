@@ -8,5 +8,6 @@ namespace Books.Core.Contracts
     {
         Task AddRangeAsync(IEnumerable<Book> books);
         Task<Book[]> GetAllBooksAsync();
+        Task<Book[]> GetFilteredBooksAsync(string searchText);
     }
 }

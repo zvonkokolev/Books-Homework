@@ -105,10 +105,15 @@ namespace Books.Core.Entities
             {
                 yield return new ValidationResult(validationResult.ErrorMessage, new string[] { nameof(Isbn)});
             }
-            //foreach (var item in BookAuthors)
-            //{
-                
-            //}
+            var duplicateAuthors = BookAuthors
+                                        .GroupBy(_ => _.Author)
+                                        .Where(_ => _.Count() > 1)
+                                        .Select(_ => _.Key);
+
+            foreach (var duplicateAuthor in duplicateAuthors)
+            {
+                yield return new ValidationResult($"{duplicateAuthor.Name} are twice authors of the book", new string[] { nameof(BookAuthors) });
+            }
         }
     }
 }

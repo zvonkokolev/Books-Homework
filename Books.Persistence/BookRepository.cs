@@ -24,7 +24,12 @@ namespace Books.Persistence
             => await _dbContext.Books
             .Include(ba => ba.BookAuthors)
             .OrderByDescending(ba => ba.Title)
-            .ToArrayAsync();
-
+            .ToArrayAsync()
+            ;
+        public async Task<Book[]> GetFilteredBooksAsync(string searchText)
+            => await _dbContext.Books
+            .Where(b => b.Title.StartsWith(searchText))
+            .ToArrayAsync()
+            ;
     }
 }

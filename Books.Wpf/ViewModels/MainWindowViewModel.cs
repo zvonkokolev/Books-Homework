@@ -17,13 +17,34 @@ namespace Books.Wpf.ViewModels
     {
         private Book _selectedBook;
         private Author _selectedAuthor;
-        private ICommand _cmdNewBook;
         private ICommand _cmdEditBook;
         private ICommand _cmdDeleteBook;
+        private string _searchText;
+        private Book[] _filteredBooks;
 
         public ObservableCollection<Book> Books { get; private set; }
         public ObservableCollection<Author> Authors { get; private set; }
+        public ICommand CmdNewBook { get; set; }
 
+        public string SearchText 
+        {
+            get => _searchText;
+            set
+            {
+                _searchText = value;
+                _ = LoadBooks();
+                OnPropertyChanged(nameof(SearchText));
+            }
+        }
+        public Book[] FilteredBooks 
+        {
+            get => _filteredBooks;
+            set
+            {
+                _filteredBooks = value;
+                OnPropertyChanged(nameof(FilteredBooks));
+            }
+        }
         public Book SelectedBook 
         {
             get => _selectedBook;
@@ -31,17 +52,15 @@ namespace Books.Wpf.ViewModels
             {
                 _selectedBook = value;
                 OnPropertyChanged(nameof(SelectedBook));
-                // Validate();
             }
         }
-        public Author SelectedAuthor 
+        public Author SelectedAuthor
         {
             get => _selectedAuthor;
             set
             {
                 _selectedAuthor = value;
                 OnPropertyChanged(nameof(SelectedAuthor));
-                //Validate();
             }
         }
 
@@ -56,6 +75,15 @@ namespace Books.Wpf.ViewModels
 
         private void LoadCommands()
         {
+            CmdNewBook = new RelayCommand(
+                execute: _ =>
+                {
+                    var window = new BookEditCreateViewModel(Controller, SelectedBook);
+                    window.Controller.ShowWindow(window, true);
+                }
+                ,
+                canExecute: _ => SelectedBook != null
+                );
         }
 
         /// <summary>
@@ -63,12 +91,20 @@ namespace Books.Wpf.ViewModels
         /// </summary>
         public async Task LoadBooks()
         {
+            Book[] books;
             await using IUnitOfWork unitOfWork = new UnitOfWork();
-
-            Book[] books = await unitOfWork.Books.GetAllBooksAsync();
+            if (SearchText == null)
+            {
+                books = await unitOfWork.Books.GetAllBooksAsync();
+            }
+            else
+            {
+                books = await unitOfWork.Books.GetFilteredBooksAsync(SearchText);
+            }
             Author[] authors = await unitOfWork.Authors.GetAllAuthorsAsync();
 
             Books = new ObservableCollection<Book>(books);
+            FilteredBooks = books;
             Authors = new ObservableCollection<Author>(authors);
 
             SelectedBook = Books.FirstOrDefault();
@@ -96,30 +132,30 @@ namespace Books.Wpf.ViewModels
         }
 
         // commands
-        public ICommand CmdNewBook 
-        {
-            get
-            {
-                if (_cmdNewBook == null)
-                {
-                    _cmdNewBook = new RelayCommand(
-                        execute: _ =>
-                        {
-                            var window = new BookEditCreateViewModel(Controller, SelectedBook);
-                            window.Controller.ShowWindow(window, true);
-                        }
-                        ,
-                        canExecute: _ => SelectedBook != null
-                        );
+        //public ICommand CmdNewBook 
+        //{
+        //    get
+        //    {
+        //        if (_cmdNewBook == null)
+        //        {
+        //            _cmdNewBook = new RelayCommand(
+        //                execute: _ =>
+        //                {
+        //                    var window = new BookEditCreateViewModel(Controller, SelectedBook);
+        //                    window.Controller.ShowWindow(window, true);
+        //                }
+        //                ,
+        //                canExecute: _ => SelectedBook != null
+        //                );
 
-                }
-                return _cmdNewBook;
-            }
-            set
-            {
-                _cmdNewBook = value;
-            }
-        }
+        //        }
+        //        return _cmdNewBook;
+        //    }
+        //    set
+        //    {
+        //        _cmdNewBook = value;
+        //    }
+        //}
         public ICommand CmdEditBook
         {
             get
