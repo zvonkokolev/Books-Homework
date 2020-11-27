@@ -7,7 +7,7 @@
         xmlns:viewModels="clr-namespace:Books.Wpf.ViewModels"
         mc:Ignorable="d"
         Title="{Binding WindowTitle}" 
-        Height="320" Width="690" 
+        Height="320" Width="790" 
         WindowStyle="ThreeDBorderWindow" BorderThickness="2" 
         BorderBrush="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}" ResizeMode="NoResize">
     <Grid>
@@ -26,25 +26,32 @@
 
         <TextBlock Grid.Row="0" Grid.Column="0" Margin="20,20,20,20">Titel</TextBlock>
         <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" 
-                 Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" Margin="20,20,20,20"/>
+                 Text="{Binding SelectedBook.Title, UpdateSourceTrigger=PropertyChanged}" 
+                 Margin="20,20,20,20"/>
 
         <TextBlock Grid.Row="1" Grid.Column="0" Margin="20,20,20,20">Verlag</TextBlock>
-        <ListView Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
-                  Margin="20,20,20,20" ItemsSource="{Binding Path=Publishers}"/>
+        <ComboBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Margin="20,20,20,20" 
+                  ItemsSource="{Binding Path=Publishers}"
+                  SelectedItem="{Binding Path=SelectedBook.Publishers}"/>
 
         <TextBlock Grid.Row="2" Grid.Column="0" Margin="20,20,20,20">Authoren</TextBlock>
-        <TextBox Grid.Row="2" Grid.Column="1" Text="" Margin="20,20,20,20"/>
+        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Path=SelectedAuthorDto.Author}" Margin="20,20,20,20"/>
 
         <ComboBox Grid.Row="2" Grid.Column="2" HorizontalAlignment="Left" 
                   Margin="20,24,50,20" Width="170" ItemsSource="{Binding Path=Authors}"
                   SelectedItem="{Binding Path=SelectedAuthor}"/>
-        <Button Content="Hinzufügen" Grid.Row="2" Grid.Column="3" HorizontalAlignment="Left"
-                Margin="25,0,0,0" VerticalAlignment="Top" Command="{Binding Path=AddNewAuthor}"/>
-        <Button Content="Entfernen" Grid.Row="2" Grid.Column="3" HorizontalAlignment="Left" 
-                Margin="25,30,0,10" VerticalAlignment="Top" Command="{Binding Path=DeleteAuthor}"/>
+        <Button Content="Hinzufügen" Grid.Row="2" Grid.Column="3" 
+                HorizontalAlignment="Left"
+                Margin="25,0,0,0" VerticalAlignment="Top" 
+                Command="{Binding Path=CmdAddNewAuthor}"/>
+        <Button Content="Entfernen" Grid.Row="2" Grid.Column="3" 
+                HorizontalAlignment="Left" 
+                Margin="25,30,0,10" VerticalAlignment="Top" 
+                Command="{Binding Path=CmdDeleteAuthor}"/>
 
         <TextBlock Grid.Row="3" Grid.Column="0" Margin="20,20,20,20">ISBN</TextBlock>
-        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Path=Isbn, UpdateSourceTrigger=PropertyChanged}" 
+        <TextBox Grid.Row="3" Grid.Column="1" 
+                 Text="{Binding Path=SelectedBook.Isbn, UpdateSourceTrigger=PropertyChanged}" 
                  TextWrapping="Wrap" Width="120" Margin="20,20,20,20"/>
         <Button Content="Buch speichern" Grid.Column="3" HorizontalAlignment="Left" 
                 Margin="20,60,0,0" Grid.Row="3" VerticalAlignment="Top"/>

@@ -24,11 +24,20 @@ namespace Books.Wpf.ViewModels
         private string _searchText;
         //private Book[] _filteredBooks;
         private BookDto _selectedBookDto;
-        private BookDto[] _filteredBooksDto;
+        private ObservableCollection<BookDto> _booksDto;
+
+        //private BookDto[] _filteredBooksDto;
         #endregion
         #region properties
-        //public ObservableCollection<Book> Books { get; private set; }
-        public ObservableCollection<BookDto> BooksDto { get; private set; }
+        public ObservableCollection<BookDto> BooksDto 
+        {
+            get => _booksDto;
+            set
+            {
+                _booksDto = value;
+                OnPropertyChanged(nameof(BooksDto));
+            }
+        }
         public ObservableCollection<Author> Authors { get; private set; }
         public ICommand CmdNewBook { get; set; }
         public ICommand CmdEditBook { get; set; }
@@ -53,24 +62,6 @@ namespace Books.Wpf.ViewModels
                 _searchText = value;
                 _ = LoadBooks();
                 OnPropertyChanged(nameof(SearchText));
-            }
-        }
-        //public Book[] FilteredBooks
-        //{
-        //    get => _filteredBooks;
-        //    set
-        //    {
-        //        _filteredBooks = value;
-        //        OnPropertyChanged(nameof(FilteredBooks));
-        //    }
-        //}
-        public BookDto[] FilteredBooksDto
-        {
-            get => _filteredBooksDto;
-            set
-            {
-                _filteredBooksDto = value;
-                OnPropertyChanged(nameof(FilteredBooksDto));
             }
         }
         public Book SelectedBook 
@@ -171,10 +162,8 @@ namespace Books.Wpf.ViewModels
             //Books = new ObservableCollection<Book>(books);
             //FilteredBooks = books;
             BooksDto = new ObservableCollection<BookDto>(booksDto);
-            FilteredBooksDto = booksDto;
-
+            //FilteredBooksDto = booksDto;
             Authors = new ObservableCollection<Author>(authors);
-
             //SelectedBook = Books.FirstOrDefault();
             SelectedBookDto = BooksDto.FirstOrDefault();
             SelectedAuthor = Authors.FirstOrDefault();

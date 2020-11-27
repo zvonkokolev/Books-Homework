@@ -36,31 +36,27 @@ namespace Books.Persistence
             ;
         public async Task<BookDto[]> GetAllBooksDtoAsync()
             => await _dbContext.Books
-            .Include(ba => ba.BookAuthors)
-            //.ToArrayAsync())
-            //.GroupBy(ba => ba.Title)
-            .Select(d => new BookDto
-            {
-                Id = d.Id,
-                Title = d.Title,
-                BookAuthors = d.BookAuthors,
-                Publishers = d.Publishers,
-                Isbn = d.Isbn
-            })
-            .OrderBy(ba => ba.Title)
-            .ToArrayAsync()
-            ;
+              .Include(ba => ba.BookAuthors)
+              .Select(d => new BookDto
+              {
+                  Id = d.Id,
+                  Title = d.Title,
+                  Name = d.BookAuthors.Select(a => a.Author.Name).FirstOrDefault(),
+                  Publishers = d.Publishers,
+                  Isbn = d.Isbn
+              })
+              .OrderBy(ba => ba.Title)
+              .ToArrayAsync()
+              ;
         public async Task<BookDto[]> GetFilteredBooksDtoAsync(string searchText)
             => await _dbContext.Books
             .Include(ba => ba.BookAuthors)
             .Where(ba => ba.Title.StartsWith(searchText))
-            //.ToArrayAsync()
-            //.GroupBy(ba => ba.Title)
             .Select(d => new BookDto
             {
                 Id = d.Id,
                 Title = d.Title,
-                BookAuthors = d.BookAuthors,
+                Name = d.BookAuthors.Select(a => a.Author.Name).FirstOrDefault(),
                 Publishers = d.Publishers,
                 Isbn = d.Isbn
             })

@@ -10,9 +10,11 @@ namespace Books.Core.Contracts
     public interface IAuthorRepository
     {
         Task<Author[]> GetAllAuthorsAsync();
-        Task<IEnumerable<AuthorDto>> GetAllDtosAsync();
+        Task<List<AuthorDto>> GetAllDtosAsync();
         Task<AuthorDto> GetDtoByIdAsync(int authorId);
-        void Add(Author author);
+        Task AddAuthorAsync(Author author);
         bool IsDuplicateAuthor(Author author);
+        Task<Author> GetAuthorByIdAsync(int id);
+        void DeleteAuthor(Author author);
     }
 }

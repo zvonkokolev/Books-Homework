@@ -9,7 +9,7 @@
         mc:Ignorable="d"
         WindowStyle="ThreeDBorderWindow" BorderThickness="2" 
         BorderBrush="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}"
-        Title="Bücherliste" Height="650" Width="999" MinHeight="350" MinWidth="750">
+        Title="Bücherliste" Height="650" Width="1048" MinHeight="350" MinWidth="750">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
@@ -29,9 +29,10 @@
                      TextWrapping="Wrap" Width="120" Margin="20,20,20,20"/>
         </StackPanel>
 
-        <DataGrid ItemsSource="{Binding Path=FilteredBooksDto}"
+        <DataGrid ItemsSource="{Binding Path=BooksDto}"
                 SelectedItem="{Binding Path=SelectedBookDto}"
-                Grid.Row="1" Grid.ColumnSpan="3"></DataGrid>
+                Grid.Row="1" Grid.ColumnSpan="3">
+        </DataGrid>
 
         <StackPanel Grid.Row="2" Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button Content="Neu" 
