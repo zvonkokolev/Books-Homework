@@ -15,15 +15,30 @@ namespace Books.Persistence
         public AuthorRepository(ApplicationDbContext dbContext)
             => _dbContext = dbContext;
 
+        public void Add(Author author)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<IEnumerable<AuthorDto>> GetAllDtosAsync()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<AuthorDto> GetDtoByIdAsync(int authorId)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public async Task<Author[]> GetAllAuthorsAsync()
             => await _dbContext.Authors
             .Include(ba => ba.BookAuthors)
             .OrderByDescending(ba => ba.Name)
-            .ToArrayAsync();
-
+            .ToArrayAsync()
+            ;
         public bool IsDuplicateAuthor(Author author)
             => _dbContext.Authors
-            .Any(a => a.Id == author.Id && a.Name.Equals(author.Name));
-
+            .Any(a => a.Id == author.Id && a.Name.Equals(author.Name))
+            ;
     }
 }

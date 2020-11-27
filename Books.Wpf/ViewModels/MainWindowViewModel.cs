@@ -106,7 +106,7 @@ namespace Books.Wpf.ViewModels
             CmdNewBook = new RelayCommand(
                 execute: _ =>
                 {
-                    var window = new BookEditCreateViewModel(Controller, SelectedBook);
+                    var window = new BookEditCreateViewModel(Controller, null);
                     window.Controller.ShowWindow(window, true);
                 }
                 ,
@@ -114,9 +114,11 @@ namespace Books.Wpf.ViewModels
                 )
                 ;
             CmdEditBook = new RelayCommand(
-                execute: _ =>
+                execute: async _ =>
                 {
-                    var window = new BookEditCreateViewModel(Controller, SelectedBook);
+                    await using IUnitOfWork unitOfWork = new UnitOfWork();
+                    Book book = await unitOfWork.Books.GetBookByIdAsync(SelectedBookDto.Id);
+                    var window = new BookEditCreateViewModel(Controller, book);
                     window.Controller.ShowWindow(window, true);
                 }
                 ,
@@ -124,10 +126,20 @@ namespace Books.Wpf.ViewModels
                 )
                 ;
             CmdDeleteBook = new RelayCommand(
-                  execute: _ =>
+                  execute: async _ =>
                   {
-                      var window = new BookEditCreateViewModel(Controller, SelectedBook);
-                      window.Controller.ShowWindow(window, true);
+                      await using IUnitOfWork unitOfWork = new UnitOfWork();
+                      Book book = await unitOfWork.Books.GetBookByIdAsync(SelectedBookDto.Id);
+                      unitOfWork.Books.DeleteBook(book);
+                      try
+                      {
+                          await unitOfWork.SaveChangesAsync();
+                      }
+                      catch (Exception)
+                      {
+
+                          throw;
+                      }
                   }
                 ,
                 canExecute: _ => SelectedBookDto != null

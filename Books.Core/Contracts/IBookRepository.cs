@@ -12,5 +12,7 @@ namespace Books.Core.Contracts
         Task<Book[]> GetFilteredBooksAsync(string searchText);
         Task<BookDto[]> GetAllBooksDtoAsync();
         Task<BookDto[]> GetFilteredBooksDtoAsync(string searchText);
+        void DeleteBook(Book book);
+        Task<Book> GetBookByIdAsync(int id);
     }
 }

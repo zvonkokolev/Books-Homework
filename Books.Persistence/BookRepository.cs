@@ -35,35 +35,43 @@ namespace Books.Persistence
             .ToArrayAsync()
             ;
         public async Task<BookDto[]> GetAllBooksDtoAsync()
-            => (await _dbContext.Books
+            => await _dbContext.Books
             .Include(ba => ba.BookAuthors)
-            .ToArrayAsync())
-            .GroupBy(ba => ba.Title)
+            //.ToArrayAsync())
+            //.GroupBy(ba => ba.Title)
             .Select(d => new BookDto
             {
-                Title = d.First().Title,
-                BookAuthors = d.First().BookAuthors,
-                Publishers = d.First().Publishers,
-                Isbn = d.First().Isbn
+                Id = d.Id,
+                Title = d.Title,
+                BookAuthors = d.BookAuthors,
+                Publishers = d.Publishers,
+                Isbn = d.Isbn
             })
-            .OrderByDescending(ba => ba.Title)
-            .ToArray()
+            .OrderBy(ba => ba.Title)
+            .ToArrayAsync()
             ;
         public async Task<BookDto[]> GetFilteredBooksDtoAsync(string searchText)
             => (await _dbContext.Books
             .Include(ba => ba.BookAuthors)
             .Where(b => b.Title.StartsWith(searchText))
             .ToArrayAsync())
-            .GroupBy(ba => ba.Title)
+            //.GroupBy(ba => ba.Title)
             .Select(d => new BookDto
             {
-                Title = d.First().Title,
-                BookAuthors = d.First().BookAuthors,
-                Publishers = d.First().Publishers,
-                Isbn = d.First().Isbn
+                Id = d.Id,
+                Title = d.Title,
+                BookAuthors = d.BookAuthors,
+                Publishers = d.Publishers,
+                Isbn = d.Isbn
             })
-            .OrderByDescending(ba => ba.Title)
+            .OrderBy(ba => ba.Title)
             .ToArray()
             ;
+
+        public void DeleteBook(Book book)
+            => _dbContext.Books.Remove(book);
+
+        public async Task<Book> GetBookByIdAsync(int id)
+            => await _dbContext.Books.SingleOrDefaultAsync(b => b.Id == id);
     }
 }

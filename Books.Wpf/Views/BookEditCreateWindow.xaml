@@ -7,7 +7,7 @@
         xmlns:viewModels="clr-namespace:Books.Wpf.ViewModels"
         mc:Ignorable="d"
         Title="{Binding WindowTitle}" 
-        Height="220" Width="490" 
+        Height="320" Width="490" 
         WindowStyle="ThreeDBorderWindow" BorderThickness="2" 
         BorderBrush="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}" ResizeMode="NoResize">
     <Grid>
@@ -15,25 +15,25 @@
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"></ColumnDefinition>
-            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal">
-            <TextBlock Text="Book" Margin="20,20,20,20">
-            </TextBlock>
-            <TextBox Text="" TextWrapping="Wrap" Width="120" Margin="20,20,20,20" DataContext="{Binding Path=Title}"/>
-        </StackPanel>
-        <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal">
-            <TextBlock Text="Author" Margin="20,20,20,20">
-            </TextBlock>
-            <TextBox Text="" TextWrapping="Wrap" Width="120" Margin="20,20,20,20" DataContext="{Binding Path=Title}"/>
-        </StackPanel>
-        <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
-            <Button Content="Neu" Command="{Binding Path=CmdNewBook}" Margin="5,5,5,5"></Button>
-            <Button Content="Bearbeiten" Command="{Binding Path=CmdEditBook}" Margin="5,5,5,5"></Button>
-            <Button Content="Löschen" Command="{Binding Path=CmdDeleteBook}" Margin="5,5,5,5"></Button>
-        </StackPanel>
+
+        <TextBlock Grid.Row="0" Grid.Column="0" Margin="20,20,20,20">Titel</TextBlock>
+        <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Text="" TextWrapping="Wrap" Width="120" Margin="20,20,20,20" DataContext="{Binding Path=Title}"/>
+
+        <TextBlock Grid.Row="1" Grid.Column="0" Margin="20,20,20,20">Verlag</TextBlock>
+        <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Text="" TextWrapping="Wrap" Width="120" Margin="20,20,20,20" DataContext="{Binding Path=Publishers}"/>
+
+        <TextBlock Grid.Row="2" Grid.Column="0" Margin="20,20,20,20">Authoren</TextBlock>
+        <TextBox Grid.Row="2" Grid.Column="1" Text="" TextWrapping="Wrap" Width="120" Margin="20,20,20,20" DataContext="{Binding Path=Author}"/>
+
+        <TextBlock Grid.Row="3" Grid.Column="0" Margin="20,20,20,20">ISBN</TextBlock>
+        <TextBox Grid.Row="3" Grid.Column="1" Text="" TextWrapping="Wrap" Width="120" Margin="20,20,20,20" DataContext="{Binding Path=Isbn}"/>
+        
     </Grid>
 </controls:MetroWindow>
