@@ -27,12 +27,12 @@ namespace Books.ImportConsole
 
             foreach (var item in notValidMatrix)
             {
-                string[] authorsAll = item[0].Split('~');
+                string[] authorsAll = item[0].Trim(' ').Split('~');
                 Book book = new Book
                 {
-                    Title = item[1],
-                    Publishers = item[2],
-                    Isbn = item[3]
+                    Title = item[1].Trim(' '),
+                    Publishers = item[2].Trim(' '),
+                    Isbn = item[3].Trim(' ')
                 };
                 foreach (var an in authorsAll)
                 {
@@ -40,7 +40,7 @@ namespace Books.ImportConsole
                     {
                         author = new Author
                         {
-                            Name = an
+                            Name = an.Trim(' ')
                         };
                         authors[an] = author;
                     }

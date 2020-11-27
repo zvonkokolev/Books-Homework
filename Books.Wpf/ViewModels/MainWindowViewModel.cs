@@ -104,10 +104,11 @@ namespace Books.Wpf.ViewModels
         private void LoadCommands()
         {
             CmdNewBook = new RelayCommand(
-                execute: _ =>
+                execute: async _ =>
                 {
-                    var window = new BookEditCreateViewModel(Controller, null);
-                    window.Controller.ShowWindow(window, true);
+                    var controller = new WindowController();
+                    var viewModel = await BookEditCreateViewModel.Create(controller, null);
+                    controller.ShowWindow(viewModel);
                 }
                 ,
                 canExecute: _ => SelectedBookDto != null
@@ -118,8 +119,9 @@ namespace Books.Wpf.ViewModels
                 {
                     await using IUnitOfWork unitOfWork = new UnitOfWork();
                     Book book = await unitOfWork.Books.GetBookByIdAsync(SelectedBookDto.Id);
-                    var window = new BookEditCreateViewModel(Controller, book);
-                    window.Controller.ShowWindow(window, true);
+                    var controller = new WindowController();
+                    var viewModel = await BookEditCreateViewModel.Create(controller, book);
+                    controller.ShowWindow(viewModel);
                 }
                 ,
                 canExecute: _ => SelectedBookDto != null
@@ -135,10 +137,9 @@ namespace Books.Wpf.ViewModels
                       {
                           await unitOfWork.SaveChangesAsync();
                       }
-                      catch (Exception)
+                      catch (ValidationException e)
                       {
-
-                          throw;
+                          throw new ValidationException($"{e.Message}");
                       }
                   }
                 ,
@@ -198,31 +199,5 @@ namespace Books.Wpf.ViewModels
                 yield return new ValidationResult($"Authoren Datenbank ist fehlerhaft", new string[] { nameof(Authors) });
             }
         }
-
-        // commands
-        //public ICommand CmdNewBook 
-        //{
-        //    get
-        //    {
-        //        if (_cmdNewBook == null)
-        //        {
-        //            _cmdNewBook = new RelayCommand(
-        //                execute: _ =>
-        //                {
-        //                    var window = new BookEditCreateViewModel(Controller, SelectedBook);
-        //                    window.Controller.ShowWindow(window, true);
-        //                }
-        //                ,
-        //                canExecute: _ => SelectedBook != null
-        //                );
-
-        //        }
-        //        return _cmdNewBook;
-        //    }
-        //    set
-        //    {
-        //        _cmdNewBook = value;
-        //    }
-        //}
     }
 }

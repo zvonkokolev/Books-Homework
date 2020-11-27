@@ -51,10 +51,10 @@ namespace Books.Persistence
             .ToArrayAsync()
             ;
         public async Task<BookDto[]> GetFilteredBooksDtoAsync(string searchText)
-            => (await _dbContext.Books
+            => await _dbContext.Books
             .Include(ba => ba.BookAuthors)
-            .Where(b => b.Title.StartsWith(searchText))
-            .ToArrayAsync())
+            .Where(ba => ba.Title.StartsWith(searchText))
+            //.ToArrayAsync()
             //.GroupBy(ba => ba.Title)
             .Select(d => new BookDto
             {
@@ -65,7 +65,7 @@ namespace Books.Persistence
                 Isbn = d.Isbn
             })
             .OrderBy(ba => ba.Title)
-            .ToArray()
+            .ToArrayAsync()
             ;
 
         public void DeleteBook(Book book)
