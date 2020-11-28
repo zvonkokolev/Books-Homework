@@ -27,10 +27,17 @@ namespace Books.Persistence
                 Id = a.Id,
                 Author = a.Name,
                 BookCount = a.BookAuthors.Count(),
-                Publishers = a.BookAuthors.Select(p => p.Book.Publishers).FirstOrDefault()
+                Books = a.BookAuthors.Select(b => b.Book).ToList(),
+                Publishers = a.BookAuthors
+                    .Select(p => p.Book.Publishers)
+                    .FirstOrDefault()
             })
-            .ToListAsync();
-
+            .ToListAsync()
+            ;
+        public async Task<Author> GetAuthorByIdAsync(int authorId)
+            => await _dbContext.Authors
+                .FindAsync(authorId)
+            ;
         public async Task<AuthorDto> GetDtoByIdAsync(int authorId)
             => await _dbContext.Authors
             .Include(ba => ba.BookAuthors)
@@ -46,7 +53,7 @@ namespace Books.Persistence
             ;
         public async Task<Author[]> GetAllAuthorsAsync()
             => await _dbContext.Authors
-            .Include(ba => ba.BookAuthors)
+            //.Include(ba => ba.BookAuthors)
             .OrderBy(ba => ba.Name)
             .ToArrayAsync()
             ;
@@ -54,12 +61,15 @@ namespace Books.Persistence
             => _dbContext.Authors
             .Any(a => a.Id == author.Id && a.Name.Equals(author.Name))
             ;
-        public async Task<Author> GetAuthorByIdAsync(int id)
-            => await _dbContext.Authors
-            .SingleOrDefaultAsync(a => a.Id == id)
-            ;
         public void DeleteAuthor(Author author)
             => _dbContext.Authors.Remove(author)
+            ;
+        public void UpdateAuthor(Author author)
+            => _dbContext.Update(author)
+            ;
+        public async Task<bool> IsExistingAuthorAsync(int id)
+            => await _dbContext.Authors
+            .AnyAsync(a => a.Id == id)
             ;
     }
 }

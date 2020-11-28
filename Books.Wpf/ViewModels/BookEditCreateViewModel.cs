@@ -107,6 +107,10 @@ namespace Books.Wpf.ViewModels
 
         public BookEditCreateViewModel(IWindowController windowController, Book book) : base(windowController)
         {
+            if (book == null)
+            { WindowTitle = "Neuer Buch anlegen"; }
+            else
+            { WindowTitle = "Buch bearbeiten"; }
             SelectedBook = book;
             LoadCommands();       
         }

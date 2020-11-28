@@ -17,7 +17,9 @@ namespace Books.Persistence
         {
             _dbContext = dbContext;
         }
-
+        public async Task AddBookAsync(Book book)
+            => await _dbContext.Books.AddAsync(book)
+            ;
         public async Task AddRangeAsync(IEnumerable<Book> books)
             => await _dbContext.AddRangeAsync(books)
             ;
@@ -41,7 +43,7 @@ namespace Books.Persistence
               {
                   Id = d.Id,
                   Title = d.Title,
-                  Name = d.BookAuthors.Select(a => a.Author.Name).FirstOrDefault(),
+                  Authors = d.BookAuthors.Select(a => a.Author).ToList(),
                   Publishers = d.Publishers,
                   Isbn = d.Isbn
               })
@@ -56,18 +58,26 @@ namespace Books.Persistence
             {
                 Id = d.Id,
                 Title = d.Title,
-                Name = d.BookAuthors.Select(a => a.Author.Name).FirstOrDefault(),
+                Authors = d.BookAuthors.Select(a => a.Author).ToList(),
                 Publishers = d.Publishers,
                 Isbn = d.Isbn
             })
             .OrderBy(ba => ba.Title)
             .ToArrayAsync()
             ;
-
         public void DeleteBook(Book book)
-            => _dbContext.Books.Remove(book);
-
+            => _dbContext.Books.Remove(book)
+            ;
+        public void UpdateBook(Book book)
+            => _dbContext.Update(book)
+            ;
         public async Task<Book> GetBookByIdAsync(int id)
-            => await _dbContext.Books.SingleOrDefaultAsync(b => b.Id == id);
+            => await _dbContext.Books
+            .SingleOrDefaultAsync(b => b.Id == id)
+            ;
+        public async Task<bool> IsExistingBookAsync(int id)
+            => await _dbContext.Books
+            .AnyAsync(b => b.Id == id)
+            ;
     }
 }

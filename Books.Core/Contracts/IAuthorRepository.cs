@@ -16,5 +16,7 @@ namespace Books.Core.Contracts
         bool IsDuplicateAuthor(Author author);
         Task<Author> GetAuthorByIdAsync(int id);
         void DeleteAuthor(Author author);
+        void UpdateAuthor(Author author);
+        Task<bool> IsExistingAuthorAsync(int id);
     }
 }

@@ -12,8 +12,7 @@ namespace Books.Core.DataTransferObjects
     {
         public int Id { get; set; }
         public string Title { get; set; }
-        [DisplayName("Authoren")]
-        public string Name { get; set; }
+        public IEnumerable<Author> Authors { get; set; }
         public string Publishers { get; set; }
         public string Isbn { get; set; }
     }
