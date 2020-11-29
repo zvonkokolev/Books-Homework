@@ -2,29 +2,43 @@
 @model DetailsModel
 
 @{
-  ViewData["Title"] = "Details";
+    ViewData["Title"] = "Details";
 }
 
-<h1>TODO: Names des Autors</h1>
+<h1>@Html.DisplayFor(model => Model.AuthorInfo.Author)</h1>
 
 <h4>Bücher:</h4>
 <table class="table">
-  <thead>
-    <tr>
-      <th>
-        Titel
-      </th>
-      <th>
-        Isbn
-      </th>
-      <th>
-        Verlag
-      </th>
-    </tr>
-  </thead>
-  <tbody>
-    
+    <thead>
+        <tr>
+            <th>
+                Titel
+            </th>
+            <th>
+                Isbn
+            </th>
+            <th>
+                Verlag
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.AuthorInfo.Books)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Isbn)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Publishers)
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>
 <div>
-  <a asp-page="../Index">Zurück zur Liste</a>
+    <a asp-page="../Index">Zurück zur Liste</a>
 </div>

@@ -1,5 +1,6 @@
 ﻿using Books.Core.Contracts;
 using Books.Core.DataTransferObjects;
+using Books.Core.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
@@ -10,18 +11,20 @@ using System.Threading.Tasks;
 
 namespace Books.Web.Pages
 {
-  public class IndexModel : PageModel
-  {
-    private readonly IUnitOfWork _uow;
-
-    public IndexModel(IUnitOfWork uow)
+    public class IndexModel : PageModel
     {
-      _uow = uow;
-    }
+        private readonly IUnitOfWork _uow;
 
-    public IActionResult OnGet()
-    {
-      return Page();
+        public IndexModel(IUnitOfWork uow)
+        {
+            _uow = uow;
+        }
+
+        public IList<AuthorDto> Authors { get; set; }
+
+        public async Task OnGetAsync()
+        {
+            Authors = await _uow.Authors.GetAllDtosAsync();
+        }
     }
-  }
 }

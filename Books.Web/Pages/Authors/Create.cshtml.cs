@@ -8,22 +8,35 @@ using System.Threading.Tasks;
 
 namespace Books.Web.Pages.Authors
 {
-  public class CreateModel : PageModel
-  {
-    private readonly IUnitOfWork _uow;
-
-    [BindProperty]
-    public string Author { get; set; }
-
-    public CreateModel(IUnitOfWork uow)
+    public class CreateModel : PageModel
     {
-      _uow = uow;
-    }
+        private readonly IUnitOfWork _uow;
 
-    // POST: Authors/Create
-    public Task<IActionResult> OnPost()
-    {
-      throw new NotImplementedException();
+        [BindProperty]
+        public Author Author { get; set; }
+
+        public CreateModel(IUnitOfWork uow)
+        {
+            _uow = uow;
+        }
+
+        public IActionResult OnGet()
+        {
+            return Page();
+        }
+
+        // POST: Authors/Create
+        public async Task<IActionResult> OnPostAsync()
+        {
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
+
+            await _uow.Authors.AddAuthorAsync(Author);
+            await _uow.SaveChangesAsync();
+
+            return RedirectToPage("./Index");
+        }
     }
-  }
 }
