@@ -10,7 +10,6 @@ namespace Books.Web.Pages.Authors
     public class DetailsModel : PageModel
     {
         private readonly IUnitOfWork _uow;
-        //public Author Author { get; set; }
         public AuthorDto AuthorInfo { get; set; }
 
         public DetailsModel(IUnitOfWork uow)
@@ -25,7 +24,6 @@ namespace Books.Web.Pages.Authors
                 return NotFound();
             }
 
-            //Author = await _uow.Authors.GetAuthorByIdAsync(id.Value);
             AuthorInfo = await _uow.Authors.GetDtoByIdAsync(id.Value);
             if (AuthorInfo == null)
             {

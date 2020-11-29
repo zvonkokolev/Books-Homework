@@ -47,6 +47,7 @@ namespace Books.Persistence
                 Id = authorId,
                 Author = a.Name,
                 BookCount = a.BookAuthors.Count(),
+                Books = a.BookAuthors.Select(b => b.Book).ToList(),
                 Publishers = a.BookAuthors.Select(p => p.Book.Publishers).FirstOrDefault()
             })
             .FirstOrDefaultAsync()
